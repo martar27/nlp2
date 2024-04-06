@@ -13,12 +13,6 @@ class DialogueSummaryDataset(Dataset):
         self.vocab = vocab
 
     def __len__(self):
-    def __init__(self, dialogues, summaries, vocab):
-        self.dialogues = dialogues
-        self.summaries = summaries
-        self.vocab = vocab
-
-    def __len__(self):
         return len(self.dialogues)
 
     def __getitem__(self, idx):
@@ -37,6 +31,23 @@ def build_vocab(dataset):
                     vocab[word] = idx
                     idx += 1
     return vocab
+
+def load_and_preprocess_data():
+    dataset = load_dataset('samsum')
+    vocab = build_vocab(dataset)
+    processed_datasets = {}
+    for split in ['train', 'test', 'validation']:
+        dialogues = [item['dialogue'] for item in dataset[split]]
+        summaries = [item['summary'] for item in dataset[split]]
+        processed_datasets[split] = DialogueSummaryDataset(dialogues, summaries, vocab)
+    return processed_datasets
+
+if __name__ == "__main__":
+    datasets = load_and_preprocess_data()
+    for split, dataset in datasets.items():
+        loader = DataLoader(dataset, batch_size=32, shuffle=True)
+        for batch in loader:
+            print(batch)
 
 def load_and_preprocess_data():
     dataset = load_dataset("samsum")
