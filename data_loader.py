@@ -48,8 +48,6 @@ if __name__ == "__main__":
         loader = DataLoader(dataset, batch_size=32, shuffle=True)
         for batch in loader:
             print(batch)
-
-def load_and_preprocess_data():
     dataset = load_dataset("samsum")
     vocab = build_vocab(dataset)
     processed_datasets = {}
