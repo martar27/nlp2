@@ -8,10 +8,6 @@ This codebase is designed to work with the SAMSum dataset for dialogue summariza
 - **Purpose**: Handles the loading and preprocessing of the SAMSum dataset. It includes functionality for tokenizing dialogues and summaries, building a vocabulary, and preparing data for training, validation, and testing.
 - **Key Functions**:
   - `load_and_preprocess_data()`: Loads the SAMSum dataset and returns processed train, validation, and test sets.
-
-### `vocabulary.py`
-- **Purpose**: Provides functionality to build and access the vocabulary created from the SAMSum dataset. It is essential for tokenizing and converting text data into numerical form that the model can process.
-- **Key Functions**:
   - `build_vocab()`: Builds a vocabulary from the dataset, mapping each unique word to an integer index.
 
 ### `model.py`
@@ -29,6 +25,15 @@ This codebase is designed to work with the SAMSum dataset for dialogue summariza
 ### `inference.py`
 - **Purpose**: Provides functionality to generate summaries for new dialogues using the trained model.
 - **Key Functions**:
+  - `generate_summary()`: Generates a summary for a given dialogue input.
+
+## Usage
+
+1. **Preprocess the data**: Run `data_loader.py` to load and preprocess the SAMSum dataset and build the vocabulary.
+2. **Train the model**: Execute `train.py` to train the model on the preprocessed data.
+3. **Generate summaries**: Use `inference.py` to generate summaries for new dialogues using the trained model.
+
+For more detailed instructions, refer to the comments within each script.
   - `generate_summary()`: Generates a summary for a given dialogue input.
 
 ## Usage
