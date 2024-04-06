@@ -38,18 +38,3 @@ For more detailed instructions, refer to the comments within each script.
 3. **Generate summaries**: Use `inference.py` to generate summaries for new dialogues using the trained model.
 
 For more detailed instructions, refer to the comments within each script.
-  - `generate_summary()`: Generates a summary for a given dialogue input.
-
-## Usage
-
-1. **Preprocess the data**: Run `data_loader.py` to load and preprocess the SAMSum dataset.
-2. **Build the vocabulary**: Execute `vocabulary.py` to create the vocabulary needed for model training and inference.
-3. **Train the model**: Execute `train.py` to train the model on the preprocessed data.
-4. **Generate summaries**: Use `inference.py` to generate summaries for new dialogues using the trained model.
-
-For more detailed instructions, refer to the comments within each script.
-1. **Preprocess the data**: Run `data_loader.py` to load and preprocess the SAMSum dataset.
-2. **Train the model**: Execute `train.py` to train the model on the preprocessed data.
-3. **Generate summaries**: Use `inference.py` to generate summaries for new dialogues using the trained model.
-
-For more detailed instructions, refer to the comments within each script.
