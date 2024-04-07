@@ -37,6 +37,8 @@ def train_model(dataset, model, optimizer, criterion, num_epochs=10):
             torch.save(model.state_dict(), 'best_model.pth')
 
 if __name__ == '__main__':
+    from data_loader import load_and_preprocess_data, collate_fn
+    
     datasets = load_and_preprocess_data()
     # Assuming vocab is stored as an attribute of the dataset. Adjust if it's stored differently.
     vocab_size = len(datasets['train'].vocab)  
