@@ -23,20 +23,9 @@ class DialogueSummaryDataset(Dataset):
 
 def collate_fn(batch):
     dialogues, summaries = zip(*batch)
-    
-    # Find the maximum length in each part of the batch
-    max_dialogue_length = max(len(dialogue) for dialogue in dialogues)
-    max_summary_length = max(len(summary) for summary in summaries)
-    
-    # Pad each dialogue and summary in the batch to the maximum length
-    dialogues_padded = [torch.cat((dialogue, torch.zeros(max_dialogue_length - len(dialogue)))) for dialogue in dialogues]
-    summaries_padded = [torch.cat((summary, torch.zeros(max_summary_length - len(summary)))) for summary in summaries]
-    
-    # Stack all dialogues and summaries to create batch tensors
-    dialogues_tensor = torch.stack(dialogues_padded)
-    summaries_tensor = torch.stack(summaries_padded)
-    
-    return dialogues_tensor, summaries_tensor
+    dialogues_padded = pad_sequence([torch.tensor(d) for d in dialogues], batch_first=True, padding_value=0)
+    summaries_padded = pad_sequence([torch.tensor(s) for s in summaries], batch_first=True, padding_value=0)
+    return dialogues_padded, summaries_padded
 
 
 def build_vocab(dataset):
@@ -65,10 +54,9 @@ if __name__ == "__main__":
     datasets = load_and_preprocess_data()
     for split, dataset in datasets.items():
         loader = DataLoader(dataset, batch_size=32, shuffle=True, collate_fn=collate_fn)
-        print(f'Processing {split} data:')
+        #print(f'Processing {split} data:')
         for dialogues, summaries in loader:
             print(dialogues.shape, summaries.shape)
     loader = DataLoader(dataset, batch_size=32, shuffle=True)
-    for batch in loader:
-        print(batch)
-
+    #for batch in loader:
+        #print(batch)
