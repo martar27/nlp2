@@ -38,8 +38,11 @@ def train_model(dataset, model, optimizer, criterion, num_epochs=10):
 
 if __name__ == '__main__':
     datasets = load_and_preprocess_data()
-    model = Encoder()  # Initialize your model here
-    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    # Assuming vocab is stored as an attribute of the dataset. Adjust if it's stored differently.
+    vocab_size = len(datasets['train'].vocab)  
+    hidden_size = 256  # Example size, adjust based on your needs
+    model = Encoder(input_size=vocab_size, hidden_size=hidden_size)  # Initialize your model here
+    optimizer = optim.Adam(model.parameters(), lr=0.01)
     criterion = nn.CrossEntropyLoss()
     train_model(datasets, model, optimizer, criterion)
 
