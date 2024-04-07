@@ -23,8 +23,8 @@ class DialogueSummaryDataset(Dataset):
 
 def collate_fn(batch):
     dialogues, summaries = zip(*batch)
-    dialogues_padded = pad_sequence([torch.tensor(d) for d in dialogues], batch_first=True, padding_value=0)
-    summaries_padded = pad_sequence([torch.tensor(s) for s in summaries], batch_first=True, padding_value=0)
+    dialogues_padded = pad_sequence([d.clone().detach() for d in dialogues], batch_first=True, padding_value=0)
+    summaries_padded = pad_sequence([s.clone().detach() for s in summaries], batch_first=True, padding_value=0)
     return dialogues_padded, summaries_padded
 
 
