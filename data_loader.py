@@ -25,7 +25,9 @@ def collate_fn(batch):
     dialogues, summaries = zip(*batch)
     dialogues_padded = pad_sequence([d.clone().detach() for d in dialogues], batch_first=True, padding_value=0)
     summaries_padded = pad_sequence([s.clone().detach() for s in summaries], batch_first=True, padding_value=0)
-    return dialogues_padded, summaries_padded
+    # Calculate lengths
+    input_lengths = torch.tensor([len(d) for d in dialogues], dtype=torch.long)
+    return dialogues_padded, summaries_padded, input_lengths
 
 
 def build_vocab(dataset):
