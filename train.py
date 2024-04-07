@@ -6,12 +6,12 @@ import torch.optim as optim
 import torch.nn as nn
 import os
 
-def train_model(dataset, model, optimizer, criterion, num_epochs=10):
+def train_model(dataset, model, optimizer, criterion, num_epochs=3):
     best_val_loss = float('inf')
     for epoch in range(num_epochs):
         model.train()
         total_loss = 0
-        for dialogues, summaries in DataLoader(dataset['train'], batch_size=32, shuffle=True):
+        for dialogues, summaries in DataLoader(dataset['train'], batch_size=8, shuffle=True):
             optimizer.zero_grad()
             output = model(dialogues, summaries)
             loss = criterion(output, summaries)
@@ -24,7 +24,7 @@ def train_model(dataset, model, optimizer, criterion, num_epochs=10):
         model.eval()
         total_val_loss = 0
         with torch.no_grad():
-            for dialogues, summaries in DataLoader(dataset['validation'], batch_size=32, shuffle=False):
+            for dialogues, summaries in DataLoader(dataset['validation'], batch_size=8, shuffle=False):
                 output = model(dialogues, summaries)
                 val_loss = criterion(output, summaries)
                 total_val_loss += val_loss.item()
@@ -38,14 +38,30 @@ def train_model(dataset, model, optimizer, criterion, num_epochs=10):
 
 if __name__ == '__main__':
     from data_loader import load_and_preprocess_data, collate_fn
-    
+
     datasets = load_and_preprocess_data()
     # Assuming vocab is stored as an attribute of the dataset. Adjust if it's stored differently.
     vocab_size = len(datasets['train'].vocab)  
     hidden_size = 256  # Example size, adjust based on your needs
+
     model = Encoder(input_size=vocab_size, hidden_size=hidden_size)  # Initialize your model here
     optimizer = optim.Adam(model.parameters(), lr=0.01)
     criterion = nn.CrossEntropyLoss()
+    
+    train_dataset = datasets['train']
+    train_loader = DataLoader(train_dataset, batch_size=8, shuffle=True, collate_fn=collate_fn)
+
+    for epoch in range(3):
+        model.train()
+        total_loss = 0
+        for dialogues, summaries in train_loader:
+            optimizer.zero_grad()
+            output = model(dialogues, summaries)
+            loss = criterion(output, summaries)
+            loss.backward()
+            optimizer.step()
+            total_loss += loss.item()
+        print(f'Epoch {epoch+1}, Loss: {total_loss}')
     train_model(datasets, model, optimizer, criterion)
 
 # Test evaluation (optional here or can be in a separate script)
@@ -58,8 +74,7 @@ with torch.no_grad():
         test_loss = criterion(output, summaries)
         total_test_loss += test_loss.item()
 print(f'Test Loss: {total_test_loss}')
-    model = PGNet()
-    optimizer = optim.Adam(model.parameters(), lr=0.001)
-    criterion = nn.CrossEntropyLoss()
-    train_model(datasets, model, optimizer, criterion)
-
+model = PGNet()
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+criterion = nn.CrossEntropyLoss()
+train_model(datasets, model, optimizer, criterion)
