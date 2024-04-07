@@ -13,9 +13,9 @@ class Encoder(nn.Module):
         self.reduce_c_n = nn.Linear(2 * hidden_size, hidden_size)
 
     # input: Tensor of shape (batch_size, seq_length, input_size)
-    # input_len: Tensor of shape (batch_size)
-    def forward(self, input, input_len):
-        packed_input = nn.utils.rnn.pack_padded_sequence(input, input_len, batch_first=True, enforce_sorted=False)
+    # input_lengths: Tensor of shape (batch_size)
+    def forward(self, input, input_lengths):
+        packed_input = nn.utils.rnn.pack_padded_sequence(input, input_lengths, batch_first=True, enforce_sorted=False)
         packed_output, (h_n, c_n) = self.lstm(packed_input)
         output, _ = nn.utils.rnn.pad_packed_sequence(packed_output, batch_first=True)
         h_n = torch.cat((h_n[-2, :, :], h_n[-1, :, :]), dim=1)  # shape: (batch_size, 2 * hidden_size)
