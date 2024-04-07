@@ -51,7 +51,7 @@ if __name__ == '__main__':
     train_dataset = datasets['train']
     train_loader = DataLoader(train_dataset, batch_size=8, shuffle=True, collate_fn=collate_fn)
 
-    for epoch in range(3):
+    for epoch in range(num_epochs):
         model.train()
         total_loss = 0
         for dialogues, summaries in train_loader:
