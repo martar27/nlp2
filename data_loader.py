@@ -23,9 +23,21 @@ class DialogueSummaryDataset(Dataset):
 
 def collate_fn(batch):
     dialogues, summaries = zip(*batch)
-    dialogues_padded = pad_sequence(dialogues, batch_first=True, padding_value=0)
-    summaries_padded = pad_sequence(summaries, batch_first=True, padding_value=0)
-    return dialogues_padded, summaries_padded
+    
+    # Find the maximum length in each part of the batch
+    max_dialogue_length = max(len(dialogue) for dialogue in dialogues)
+    max_summary_length = max(len(summary) for summary in summaries)
+    
+    # Pad each dialogue and summary in the batch to the maximum length
+    dialogues_padded = [torch.cat((dialogue, torch.zeros(max_dialogue_length - len(dialogue)))) for dialogue in dialogues]
+    summaries_padded = [torch.cat((summary, torch.zeros(max_summary_length - len(summary)))) for summary in summaries]
+    
+    # Stack all dialogues and summaries to create batch tensors
+    dialogues_tensor = torch.stack(dialogues_padded)
+    summaries_tensor = torch.stack(summaries_padded)
+    
+    return dialogues_tensor, summaries_tensor
+
 
 def build_vocab(dataset):
     vocab = {'<pad>': 0, '<unk>': 1, '<sos>': 2, '<eos>': 3}
